@@ -16,7 +16,7 @@ class ReminderApp:
         self.task_label = tk.Label(self.root, text="你正在做：\n", fg="white", bg="black", wraplength=200)
         self.task_label.pack()
 
-        self.task_entry = tk.Entry(self.root, fg="white", bg="black")
+        self.task_entry = tk.Entry(self.root, fg="black", bg="white")
         self.task_entry.pack()
         self.task_entry.bind('<Return>', self.update_task)  # 绑定回车键到update_task函数
 
@@ -35,13 +35,19 @@ class ReminderApp:
     def update_time(self):
         elapsed_time = time.time() - self.start_time
         self.time_label.config(text=f"已用时间：{int(elapsed_time)}秒")
+        if int(elapsed_time) % 60 == 0:
+            self.task_entry.configure(bg='red')
+        if (int(elapsed_time)-1) % 60 == 0:
+            self.task_entry.configure(bg='white')
         self.root.after(1000, self.update_time)
 
     def on_enter(self, event):
         self.root.attributes('-alpha', 1.0)
+        self.time_label.config(text=f"已用时间：{round((time.time() - self.start_time)//60)}分")
 
     def on_leave(self, event):
         self.root.attributes('-alpha', 0.5)
+        self.time_label.config(text=f"已用时间：{int((time.time() - self.start_time))}秒")
 
     def run(self):
         self.root.mainloop()
